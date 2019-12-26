@@ -1,56 +1,178 @@
-# **Finding Lane Lines on the Road** 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
-
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
-
-Overview
+## Udacity SDC (Self-Driving Car): Finding Lane Lines on the Road ##
 ---
 
-When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
+## Overview ##
+In this project, some concepts of computer vision werw implemented to identify lane lanes on the road from images and videos in this context. A pipeline is developed with a series of individual images to validate the concepts required to implement in a video stream, that is the final objective for this project.
 
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
+## The Project ##
+The goals / steps of this project are the following:
+* Make a pipeline that finds lane lines on the road using images
+* Reflect verify the result obtained in images in a videostream.
 
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
+[//]: # (Image References)
 
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
+[image1]: ./test_images/solidWhiteRight.jpg "Solid white"
+
+[image2]: ./test_images/solidYellowLeft.jpg "Solid white"
+
+[image1_step1]: ./test_images_output/image1_step1.jpg "Step 1: Grayscale"
+
+[image1_step2]: ./test_images_output/image1_step2.jpg "Step 2: Blur"
+
+[image1_step3]: ./test_images_output/image1_step3.jpg "Step 3: Blur"
+
+[image1_step4]: ./test_images_output/image1_step4.jpg "Step 4: Blur"
+
+[image1_step5]: ./test_images_output/image1_step5.jpg "Step 5: Blur"
+
+[image1_step6]: ./test_images_output/image1_step6.jpg "Step 6: Blur"
 
 
-Creating a Great Writeup
+
+
+[image2_step1]: ./test_images_output/image2_step1.jpg "Step 1: Grayscale"
+
+[image2_step2]: ./test_images_output/image2_step2.jpg "Step 2: Blur"
+
+[image2_step3]: ./test_images_output/image2_step3.jpg "Step 3: Blur"
+
+[image2_step4]: ./test_images_output/image2_step4.jpg "Step 4: Blur"
+
+[image2_step5]: ./test_images_output/image2_step5.jpg "Step 5: Blur"
+
+[image2_step6]: ./test_images_output/image2_step6.jpg "Step 6: Blur"
+
+[original_video1]: ./test_videos/solidWhiteRight.mp4 "Solid Yellow Right"
+
+[original_video2]: ./test_videos/solidYellowLeft.jpg "Solid Yellow Left"
+
+[video1]: ./test_videos_output/solidWhiteRight.mp4 "Solid Yellow Right"
+
+[video2]: ./test_videos_output/solidYellowLeft.jpg "Solid Yellow Left"
+
 ---
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
 
-1. Describe the pipeline
+## Pipeline Description ##
+This pipeline consist on 6 steps:
 
-2. Identify any shortcomings
+* Grayscale: Convert Image to grayscale.
+* Gaussian: Apply Gaussian smoothing Module.
+* Canny: Apply Canny Edge detection.
+* Region: Select Region of interest.
+* Hough: Apply Hough Transform to detect lines.
+* Draw lines
 
-3. Suggest possible improvements
+## Parameters for each step ##
 
-We encourage using images in your writeup to demonstrate how your pipeline works.  
+#### Convert Image to grayscale.
 
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
+This step requires only use the respective operation to convert image to grayscale. Command used was ```grayscale(image)```, that use the following instruction:
 
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
+```
+cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+```
+#### Apply Gaussian smoothing Module.
 
+Similar as the previous step, the command used was ```gaussian_blur(image, kernel_size)``` which use internaly use the following instruction:
 
-The Project
----
+```cv2.GaussianBlur(img, (kernel_size, kernel_size), 0)```
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
+Parameter used in kernel size was ```11```. 
 
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) if you haven't already.
+#### Apply Canny Edge detection.
 
-**Step 2:** Open the code in a Jupyter Notebook
+Command used was ```canny(image, low_threshold, high_threshold)``` which use the following instruction:
 
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out [Udacity's free course on Anaconda and Jupyter Notebooks](https://classroom.udacity.com/courses/ud1111) to get started.
+```cv2.Canny(img, low_threshold, high_threshold)```
 
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
+Parameters used in this command was:
+```
+low_threshold = 80
+high_threshold = 150
+```
 
-`> jupyter notebook`
+#### Select Region of interest.
 
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+Command used was ```region_of_interest(image, area)```, the parameter ```area``` was calculated with this lines:
 
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
+```
+left_bottom = [0, 539]
+right_bottom = [959, 539]
+apex = [479, 310]
+area = np.array([[left_bottom, right_bottom, apex]], dtype=np.int32)
+```
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+#### Apply Hough Transform to detect lines.
+
+Command used was ```hough_lines(image, rho, theta, threshold, min_line_len, max_line_gap)```, each parameter was defined as follows:
+
+```
+rho = 2 # distance resolution in pixels of the Hough grid
+theta = np.pi/180 # angular resolution in radians of the Hough grid
+threshold = 15     # minimum number of votes (intersections in Hough grid cell)
+min_line_len = 15 #minimum number of pixels making up a line
+max_line_gap = 20    # maximum gap in pixels between connectable line segments
+img_lines = hough_lines(img_region, rho, theta, threshold, min_line_len, max_line_gap)
+```
+
+#### Draw lines
+Command used was ```weighted_img(image, image)```, each parameter was defined on the following instruction:
+
+## Results on Images ##
+
+#### Solid White: ####
+The image, named ```solidWhiteRight.jpg``` was used as the first input to the pipeline.
+
+![image1]
+
+Result obtained is:
+
+Grayscale:
+![image1_step1]
+Gaussian:
+![image1_step2]
+Canny:
+![image1_step3]
+Select Region:
+![image1_step4]
+Hough Transform:
+![image1_step5]
+Draw Lines:
+![image1_step6]
+
+The image, named ```solidWhiteRight.jpg``` was used as the first input to the pipeline.
+
+#### Solid Yellow: ####
+The image, named ```solidYellowCurve2.jpg``` was used as the next input to the pipeline.
+
+![image2]
+
+The result obtained is:
+
+Grayscale:
+![image2_step1]
+Gaussian:
+![image2_step2]
+Canny:
+![image2_step3]
+Select Region:
+![image2_step4]
+Hough Transform:
+![image2_step5]
+Draw Lines:
+![image2_step6]
+
+## Results on Video ##
+
+The procesing made before was implemented in the videos:
+
+[Solid White Right][original_video1]
+
+[Solid White Left][original_video2]
+
+And the result obtained is (respectively):
+
+[video1]
+
+[video2]
 
