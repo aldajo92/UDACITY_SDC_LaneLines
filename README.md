@@ -176,3 +176,10 @@ And the result obtained is (respectively):
 
 [video2]
 
+## Reflection ##
+
+In the previous results, we can identify some parts that require improvements. There is a lot of issues when the final pipeline is applied to video, in where noise dots affects the constant line expected, and some jumps in the final lines appears. A possible solution on that is to manage some buffer and apply statistics methods to remove dots that affects the final result, using the previous images. Also, found a method to define parameters in the thresholds for canny and modify Hough Transform according to image. 
+
+Another way is to use machine learning or deep learning that learns where is the lines, and predict the possible lines with a neuronal network.
+
+As a conclusion, the main issue with this image processing is to calibrate the pipeline, so constants values cannot adapt to differents lights and colors that affects the differents images, and the final video. A dynamical method should be applied, there is another kind of knowledges that could help but that ones are out of the scope of this work.
